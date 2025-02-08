@@ -1,0 +1,33 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Real-time AI Drawing</title>
+    <!-- Include the Socket.IO client library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
+</head>
+<body>
+    <h1>Real-time AI Drawing</h1>
+    <button id="startBtn">Start Training</button>
+    <div>
+        <p>Current Iteration: <span id="iteration">0</span></p>
+        <img id="aiImage" src="" alt="AI Generated Image" width="256" height="256">
+    </div>
+
+    <script>
+      // Connect to the Socket.IO server
+      var socket = io();
+      
+      // When the button is clicked, initiate the training process.
+      document.getElementById('startBtn').addEventListener('click', function() {
+          socket.emit('start_training', {});
+      });
+      
+      // Listen for updated images and iteration numbers from the backend.
+      socket.on('new_image', function(data) {
+          document.getElementById('iteration').textContent = data.iteration;
+          document.getElementById('aiImage').src = 'data:image/jpeg;base64,' + data.image_data;
+      });
+    </script>
+</body>
+</html>
